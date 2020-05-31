@@ -20,12 +20,12 @@ import java.util.Set;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) {
-        User user = userService.findUserByUserName(userName);
+        User user = userServiceImpl.findUserByUserName(userName);
         List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
         return buildUserForAuthentication(user, authorities);
     }
