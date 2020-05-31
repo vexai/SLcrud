@@ -31,11 +31,6 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">Choose account operation</div>
                 <div class="panel-body">
-                    <form action="#"
-                          th:action="@{/pay/{id}(id = ${userId})}" method="post">
-                        <label>Pay</label>
-                        <input type="number" />
-                    </form>
                     <span th:utext="${accBudget}"></span>
                     <form th:action="@{/user/savedAccountOperation/{id}(id = ${userId})}" method="get">
                         <div>
@@ -50,7 +45,20 @@
                             Save </button>
                     </form>
                 </div>
-
+            </div>
+            <div class="panel-heading">Choose Id to transfer</div>
+            <div class="panel-body">
+                <form th:action="@{/user/operationTransfered/{id}(id = ${userId})}" method="get">
+                    <div>
+                        <label>User Id Destination</label>
+                        <input type="number" name="userIdDestination"/>
+                    </div>
+                    <div>
+                        <label>Transfer Amount</label>
+                        <input type="number" name="operationBudget"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-md-offset-4">Transfer</button>
+                </form>
             </div>
 
 

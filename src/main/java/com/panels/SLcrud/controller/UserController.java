@@ -123,12 +123,12 @@ public class UserController {
         return "redirect:/admin/home?deletedId" + id;
     }
 
-    @PostMapping("/pay/{id}")
-    public String pay(@PathVariable Long id, double budget, @Valid User user, Model model) {
-        this.userService.payToAccount(id, budget);
-        user.setId(id);
-        return "redirect:/user/home?payedId" + id;
-    }
+//    @PostMapping("/pay/{id}")
+//    public String pay(@PathVariable Long id, double budget, @Valid User user, Model model) {
+//        this.userService.payToAccount(id, budget);
+//        user.setId(id);
+//        return "redirect:/user/home?payedId" + id;
+//    }
 
 
     @GetMapping("/user/savedAccountOperation/{id}")
@@ -153,6 +153,19 @@ public class UserController {
             return "redirect:/user/home?savedAccountOperation?ERRORERRORERROR=" + e.getMessage();
         }
         return "redirect:/user/home?savedAccountOperation=" + id;
+    }
+
+    @GetMapping("/user/operationTransfered/{id}")
+    public String transferToAccount(@PathVariable Long id,
+                                    Long userIdDestination,
+                                    @RequestParam double operationBudget) {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        modelAndView.addObject("userId", user.getId());
+        this.userService.transfer(id, userIdDestination, operationBudget);
+        return "redirect:/user/home?operationSuccess=" + id;
+
     }
 }
 
