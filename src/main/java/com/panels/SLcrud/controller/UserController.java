@@ -2,8 +2,10 @@ package com.panels.SLcrud.controller;
 
 
 import com.panels.SLcrud.model.Account;
+import com.panels.SLcrud.model.Operation;
 import com.panels.SLcrud.model.User;
 import com.panels.SLcrud.repo.AccountRepository;
+import com.panels.SLcrud.repo.OperationRepository;
 import com.panels.SLcrud.service.UserService;
 import com.panels.SLcrud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +32,14 @@ public class UserController {
 
     private UserService userServiceInterface;
 
-    public UserController(AccountRepository accountRepository, UserService userServiceInterface) {
+    private OperationRepository operationRepository;
+
+    public UserController(AccountRepository accountRepository,
+                          UserService userServiceInterface,
+                          OperationRepository operationRepository) {
         this.accountRepository = accountRepository;
         this.userServiceInterface = userServiceInterface;
+        this.operationRepository = operationRepository;
     }
 
     @GetMapping(value={"/", "/login"})
@@ -113,6 +120,8 @@ public class UserController {
         modelAndView.addObject("accBudget", user.getAccBudget());
         modelAndView.addObject("userId", user.getId());
         modelAndView.addObject("userMessage","USER Role");
+        List<Operation> allUserOperations = this.userService.selectAllUserOperations(user.getId());
+        modelAndView.addObject("allOperations", allUserOperations);
         modelAndView.setViewName("user/home");
         return modelAndView;
     }
@@ -142,11 +151,11 @@ public class UserController {
         try {
             if (operationType.equals("PAYMENT"))
             {
-                this.userService.payToAccount(id,operationBudget);
+                this.userService.payToAccount(id,operationBudget, operationType);
             }
             else if (operationType.equals("WITHDRAWAL"))
             {
-                this.userService.removeFromAccount(id, operationBudget);
+                this.userService.removeFromAccount(id, operationBudget, operationType);
             }
 
         } catch (Exception e) {
@@ -158,14 +167,20 @@ public class UserController {
     @GetMapping("/user/operationTransfered/{id}")
     public String transferToAccount(@PathVariable Long id,
                                     Long userIdDestination,
-                                    @RequestParam double operationBudget) {
+                                    @RequestParam double operationBudget, String operationType) {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userId", user.getId());
-        this.userService.transfer(id, userIdDestination, operationBudget);
+        try {
+            if (operationType.equals("TRANSFER"))
+            {
+                this.userService.transfer(id, userIdDestination, operationBudget, operationType);
+            }
+        } catch (Exception e) {
+            return "redirect:/user/home?operationERROR=" + id + e.getMessage();
+        }
         return "redirect:/user/home?operationSuccess=" + id;
-
     }
 }
 

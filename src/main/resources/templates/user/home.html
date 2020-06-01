@@ -50,6 +50,9 @@
             <div class="panel-body">
                 <form th:action="@{/user/operationTransfered/{id}(id = ${userId})}" method="get">
                     <div>
+                        <input type="radio" name="operationType" value="TRANSFER" checked="checked" hidden/>
+                    </div>
+                    <div>
                         <label>User Id Destination</label>
                         <input type="number" name="userIdDestination"/>
                     </div>
@@ -60,7 +63,21 @@
                     <button type="submit" class="btn btn-primary col-md-offset-4">Transfer</button>
                 </form>
             </div>
-
+            <table class="table table-striped">
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Operation</th>
+                    <th>User Destination Id</th>
+                </tr>
+                <tr th:each="operation : ${allOperations}">
+                    <td th:text="${operation.getOperationId()}"></td>
+                    <td th:text="${operation.getOperationDate()}"></td>
+                    <td th:text="${operation.getAmount()}"></td>
+                    <td th:text="${operation.getOp()}"></td>
+                    <td th:text="${operation.getUser().getId()}"></td>
+                </tr>
 
             <p class="admin-message-text text-center" th:utext="${userMessage}"></p>
         </div>

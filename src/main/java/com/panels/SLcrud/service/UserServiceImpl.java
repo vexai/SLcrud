@@ -1,15 +1,17 @@
 package com.panels.SLcrud.service;
 
-import com.panels.SLcrud.model.Role;
-import com.panels.SLcrud.model.User;
+import com.panels.SLcrud.model.*;
 import com.panels.SLcrud.repo.AccountRepository;
+import com.panels.SLcrud.repo.OperationRepository;
 import com.panels.SLcrud.repo.RoleRepository;
 import com.panels.SLcrud.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -21,15 +23,19 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private AccountRepository accountRepository;
 
+    private OperationRepository operationRepository;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                        RoleRepository roleRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       AccountRepository accountRepository) {
+                       AccountRepository accountRepository,
+                           OperationRepository operationRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.accountRepository = accountRepository;
+        this.operationRepository = operationRepository;
     }
 
     public User findUserByEmail(String email) {
@@ -62,16 +68,27 @@ public class UserServiceImpl implements UserService {
         this.userRepository.deleteById(id);
     }
 
+    public List<Operation> selectAllOperations() {
+        return this.operationRepository.findAllByOp("op");
+    }
+
+    public List<Operation> selectAllUserOperations(Long id) {
+        User user = userRepository.findUserById(id);
+        return this.operationRepository.findAllByUserId(user.getId());
+    }
+
 
     @Override
-    public void payToAccount(Long id, double budget) {
+    public void payToAccount(Long id, double budget, String op) {
         User user = userRepository.findUserById(id);
+        Operation operation = new Operation(new Date(), budget, user, op);
+        operationRepository.save(operation);
         user.setAccBudget(user.getAccBudget() + budget);
         userRepository.save(user);
     }
 
     @Override
-    public void removeFromAccount(Long id, double budget) {
+    public void removeFromAccount(Long id, double budget, String op) {
         User user = userRepository.findUserById(id);
         if (user.getAccBudget() < budget)
         {
@@ -80,19 +97,23 @@ public class UserServiceImpl implements UserService {
         else {
             user.setAccBudget(user.getAccBudget() - budget);
         }
+        Operation operation = new Operation(new Date(), budget, user, op);
+        operationRepository.save(operation);
         userRepository.save(user);
     }
 
     @Override
-    public void transfer(Long id, Long userIdDestination, double amount) {
+    public void transfer(Long id, Long userIdDestination, double amount, String op) {
         if(id.equals(userIdDestination)) {
             throw new RuntimeException(
                     "Impossible operation: account id must be different");
         } else {
-            payToAccount(userIdDestination, amount);
-            removeFromAccount(id, amount);
+            payToAccount(userIdDestination, amount, op);
+            removeFromAccount(id, amount, op);
         }
     }
+
+
 }
 
 

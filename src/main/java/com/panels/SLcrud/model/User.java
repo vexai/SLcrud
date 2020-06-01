@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
 import java.util.Set;
 
 @Data
@@ -22,6 +23,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @Column(name="id")
     private Long id;
     @Column(name = "user_name")
     @Length(min = 5, message = "*Your user name must have at least 5 characters")
@@ -48,6 +50,8 @@ public class User {
     private Set<Role> roles;
     @Column(name="user_account_budget")
     private double accBudget;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<Operation> operations;
 //    @OneToOne
 //    @MapsId
 //    private Account account;
