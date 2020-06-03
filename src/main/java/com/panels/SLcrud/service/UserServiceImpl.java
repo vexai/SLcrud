@@ -107,7 +107,7 @@ public class UserServiceImpl {
 //    @Override
     public void payToAccount(Long id, double budget, String op, Long userIdDestination, Long userIdOrigin) {
         User user = userRepository.findUserById(id);
-        Operation operation = new Operation(new Date(), budget, user, "PAY", userIdDestination, userIdOrigin);
+        Operation operation = new Operation(new Date(), budget, user, "PAYMENT", userIdDestination, userIdOrigin);
 //        operation.setDid(user.getId());
         operationRepository.save(operation);
         user.setAccBudget(user.getAccBudget() + budget);
@@ -124,7 +124,7 @@ public class UserServiceImpl {
         else {
             user.setAccBudget(user.getAccBudget() - budget);
         }
-        Operation operation = new Operation(new Date(), budget, user, "REMOVE", userIdDestination, userIdOrigin);
+        Operation operation = new Operation(new Date(), budget, user, "TRANSFER", userIdDestination, userIdOrigin);
 //        operation.setOid(user.getId());
         operationRepository.save(operation);
         userRepository.save(user);
@@ -136,8 +136,8 @@ public class UserServiceImpl {
             throw new RuntimeException(
                     "Impossible operation: account id must be different");
         } else {
-            payToAccount(userIdDestination, amount, "PAY", userIdDestination, userIdOrigin);
-            removeFromAccount(userIdOrigin, amount, "REMOVE", userIdDestination, userIdOrigin);
+            payToAccount(userIdDestination, amount, "PAYMENT", userIdDestination, userIdOrigin);
+            removeFromAccount(userIdOrigin, amount, "TRANSFER", userIdDestination, userIdOrigin);
         }
     }
 

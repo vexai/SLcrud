@@ -39,7 +39,7 @@
                             <input type="number" name="operationBudget"  />
                         </div>
                         <input type="radio" name="operationType" value="DEPOSIT" checked="checked"/>
-                        <label>PAYMENT</label>
+                        <label>DEPOSIT</label>
                         <input type="radio"  name="operationType" value="WITHDRAWAL" />
                         <label>WITHDRAWAL</label>
                         <button type="submit" class="btn btn-primary col-md-offset-4">
@@ -74,17 +74,25 @@
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Operation</th>
-                    <th>User Origin Id</th>
-                    <th>User Destination Id</th>
+                    <th>Id</th>
                 </tr>
-                <tr th:each="operation : ${allOperations}">
-                    <td th:text="${operation.getOperationId()}"></td>
-                    <td th:text="${operation.getOperationDate()}"></td>
-                    <td th:text="${operation.getAmount()}"></td>
-                    <td th:text="${operation.getOp()}"></td>
-                    <td th:text="${operation.getDid()}"></td>
-                    <td th:text="${operation.getOid()}"></td>
+                <tr th:each="i : ${#numbers.sequence(allOperations.size() -1, 0, -1)}">
+                    <td th:text="${allOperations[i].getOperationId()}"></td>
+                    <td th:text="${allOperations[i].getOperationDate()}"></td>
+                    <td th:text="${allOperations[i].getAmount()}"></td>
+                    <td>
+                        <div th:text="${allOperations[i].getOp()}">
+                            <p th:case="'TRANSFER'"><span th:text="'TRANSFER_TO'"></span> TO</p>
+                            <p th:case="'PAYMENT'">PAYMENT FROM</p>
+                        </div>
+                    </td>
 
+                    <td>
+                        <div th:switch="${allOperations[i].getOp()}">
+                            <p th:case="'TRANSFER'"><span th:text="${allOperations[i].getOid()}"></span></p>
+                            <p th:case="'PAYMENT'"><span th:text="${allOperations[i].getDid()}"></span></p>
+                        </div>
+                    </td>
                 </tr>
             </table>
 
@@ -111,24 +119,30 @@
                         <th>Date</th>
                         <th>Text</th>
                         <th>Type</th>
-                        <th>Oid</th>
-                        <th>Did</th>
+                        <th>id</th>
                     </tr>
-                    <tr th:each="message : ${allMessages}">
-                        <th th:text="${message.getMessageid()}"></th>
-                        <th th:text="${message.getMessageDate()}"></th>
-                        <th th:text="${message.getText()}"></th>
-                        <th th:text="${message.getMessageType()}"></th>
-                        <th th:text="${message.getOid()}"></th>
-                        <th th:text="${message.getDid()}"></th>
-
+                    <tr th:each="i : ${#numbers.sequence(allMessages.size() -1, 0 ,-1)}">
+                        <td th:text="${allMessages[i].getMessageid()}"></td>
+                        <td th:text="${allMessages[i].getMessageDate()}"></td>
+                        <td th:text="${allMessages[i].getText()}"></td>
+                        <td>
+                            <div th:text="${allMessages[i].getMessageType()}">
+                                <p th:case="'SENT'">SENT TO</p>
+                                <p th:case="'RECEIVED'">RECEIVED FROM</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div th:switch="${allMessages[i].getMessageType()}">
+                                <p th:case="'SENT'"><span th:text="${allMessages[i].getDid()}"></span></p>
+                                <p th:case="'RECEIVED'"><span th:text="${allMessages[i].getOid()}"></span></p>
+                            </div>
+                        </td>
                     </tr>
                 </table>
             </div>
             <p class="admin-message-text text-center" th:utext="${userMessage}"></p>
         </div>
     </div>
-
 </div>
 </body>
 </html>
