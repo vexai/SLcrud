@@ -1,10 +1,7 @@
 package com.panels.SLcrud.service;
 
 import com.panels.SLcrud.model.*;
-import com.panels.SLcrud.repo.AccountRepository;
-import com.panels.SLcrud.repo.OperationRepository;
-import com.panels.SLcrud.repo.RoleRepository;
-import com.panels.SLcrud.repo.UserRepository;
+import com.panels.SLcrud.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,13 +13,13 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private AccountRepository accountRepository;
-
+    private MessageRepository messageRepository;
     private OperationRepository operationRepository;
 
     @Autowired
@@ -30,12 +27,14 @@ public class UserServiceImpl implements UserService {
                        RoleRepository roleRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        AccountRepository accountRepository,
-                           OperationRepository operationRepository) {
+                           OperationRepository operationRepository,
+                           MessageRepository messageRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.accountRepository = accountRepository;
         this.operationRepository = operationRepository;
+        this.messageRepository = messageRepository;
     }
 
     public User findUserByEmail(String email) {
@@ -77,18 +76,20 @@ public class UserServiceImpl implements UserService {
         return this.operationRepository.findAllByUserId(user.getId());
     }
 
-
-    @Override
-    public void payToAccount(Long id, double budget, String op) {
+    public List<Message> selectAllMessages(Long id) {
         User user = userRepository.findUserById(id);
-        Operation operation = new Operation(new Date(), budget, user, op);
+        return this.messageRepository.findAllByUserId(user.getId());
+    }
+
+    public void depostitToAccount(Long id, double budget, String op, Long did, Long oid) {
+        User user = userRepository.findUserById(id);
+        Operation operation = new Operation(new Date(), budget, user, op, did, oid);
         operationRepository.save(operation);
         user.setAccBudget(user.getAccBudget() + budget);
         userRepository.save(user);
     }
 
-    @Override
-    public void removeFromAccount(Long id, double budget, String op) {
+    public void withdrawalFromAccount(Long id, double budget, String op, Long did, Long oid) {
         User user = userRepository.findUserById(id);
         if (user.getAccBudget() < budget)
         {
@@ -97,23 +98,70 @@ public class UserServiceImpl implements UserService {
         else {
             user.setAccBudget(user.getAccBudget() - budget);
         }
-        Operation operation = new Operation(new Date(), budget, user, op);
+        Operation operation = new Operation(new Date(), budget, user, op, did, oid);
         operationRepository.save(operation);
         userRepository.save(user);
     }
 
-    @Override
-    public void transfer(Long id, Long userIdDestination, double amount, String op) {
-        if(id.equals(userIdDestination)) {
+
+//    @Override
+    public void payToAccount(Long id, double budget, String op, Long userIdDestination, Long userIdOrigin) {
+        User user = userRepository.findUserById(id);
+        Operation operation = new Operation(new Date(), budget, user, "PAY", userIdDestination, userIdOrigin);
+//        operation.setDid(user.getId());
+        operationRepository.save(operation);
+        user.setAccBudget(user.getAccBudget() + budget);
+        userRepository.save(user);
+    }
+
+//    @Override
+    public void removeFromAccount(Long id, double budget, String op, Long userIdDestination, Long userIdOrigin) {
+        User user = userRepository.findUserById(id);
+        if (user.getAccBudget() < budget)
+        {
+            throw  new RuntimeException("Below 0");
+        }
+        else {
+            user.setAccBudget(user.getAccBudget() - budget);
+        }
+        Operation operation = new Operation(new Date(), budget, user, "REMOVE", userIdDestination, userIdOrigin);
+//        operation.setOid(user.getId());
+        operationRepository.save(operation);
+        userRepository.save(user);
+    }
+
+//    @Override
+    public void transfer(Long userIdOrigin,Long userIdDestination, double amount, String op, Long did, Long oid) {
+        if(userIdOrigin.equals(userIdDestination)) {
             throw new RuntimeException(
                     "Impossible operation: account id must be different");
         } else {
-            payToAccount(userIdDestination, amount, op);
-            removeFromAccount(id, amount, op);
+            payToAccount(userIdDestination, amount, "PAY", userIdDestination, userIdOrigin);
+            removeFromAccount(userIdOrigin, amount, "REMOVE", userIdDestination, userIdOrigin);
         }
     }
 
+    public void sentMessage(Long id, String text, String messageType, Long userIdDestination, Long userIdOrigin) {
+        User user = userRepository.findUserById(id);
+        Message message = new Message(new Date(),messageType, text, userIdOrigin, userIdDestination, user);
+        messageRepository.save(message);
+    }
 
+    public void receivedMessage(Long id, String text, String messageType, Long userIdDestination, Long userIdOrigin) {
+        User user = userRepository.findUserById(id);
+        Message message = new Message(new Date(),messageType, text, userIdOrigin, userIdDestination, user);
+        messageRepository.save(message);
+    }
+
+    public void send(Long userIdOrigin, Long userIdDestination, String text, String messageType,Long did, Long oid){
+        if(userIdOrigin.equals(userIdDestination)) {
+            throw new RuntimeException(
+                    "Impossible operation: account id must be different");
+        } else {
+            sentMessage(userIdOrigin, text,"SENT",userIdDestination, userIdOrigin);
+            receivedMessage(userIdDestination, text,"RECEIVED", userIdDestination, userIdOrigin);
+        }
+    }
 }
 
 

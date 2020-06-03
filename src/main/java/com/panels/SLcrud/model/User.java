@@ -52,6 +52,8 @@ public class User {
     private double accBudget;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Collection<Operation> operations;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Collection<Message> messages;
 //    @OneToOne
 //    @MapsId
 //    private Account account;

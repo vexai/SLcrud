@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 
 <body>
@@ -37,11 +38,11 @@
                             <label>Amount: </label>
                             <input type="number" name="operationBudget"  />
                         </div>
-                        <input type="radio" name="operationType" value="PAYMENT" checked="checked"/>
+                        <input type="radio" name="operationType" value="DEPOSIT" checked="checked"/>
                         <label>PAYMENT</label>
                         <input type="radio"  name="operationType" value="WITHDRAWAL" />
                         <label>WITHDRAWAL</label>
-                        <button type="submit" class="btn btn-primary col-md-offset-4" >
+                        <button type="submit" class="btn btn-primary col-md-offset-4">
                             Save </button>
                     </form>
                 </div>
@@ -50,15 +51,19 @@
             <div class="panel-body">
                 <form th:action="@{/user/operationTransfered/{id}(id = ${userId})}" method="get">
                     <div>
-                        <input type="radio" name="operationType" value="TRANSFER" checked="checked" hidden/>
+                        <input type="radio" name="operationType"  checked="checked" hidden/>
                     </div>
                     <div>
                         <label>User Id Destination</label>
-                        <input type="number" name="userIdDestination"/>
+                        <input type="number" name="userIdDestination" id="userIdTransfer" value=""/>
+                    </div>
+                    <div>
+                        <label>did</label>
+                        <input type="number" name="did"id="userIdTransferDid" value="" hidden/>
                     </div>
                     <div>
                         <label>Transfer Amount</label>
-                        <input type="number" name="operationBudget"/>
+                        <input type="number" name="operationBudget" />
                     </div>
                     <button type="submit" class="btn btn-primary col-md-offset-4">Transfer</button>
                 </form>
@@ -69,6 +74,7 @@
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Operation</th>
+                    <th>User Origin Id</th>
                     <th>User Destination Id</th>
                 </tr>
                 <tr th:each="operation : ${allOperations}">
@@ -76,9 +82,49 @@
                     <td th:text="${operation.getOperationDate()}"></td>
                     <td th:text="${operation.getAmount()}"></td>
                     <td th:text="${operation.getOp()}"></td>
-                    <td th:text="${operation.getUser().getId()}"></td>
-                </tr>
+                    <td th:text="${operation.getDid()}"></td>
+                    <td th:text="${operation.getOid()}"></td>
 
+                </tr>
+            </table>
+
+            <div class="panel-heading">Send Message</div>
+            <div class="panel-body">
+                <form th:action="@{/user/sentMessage/{id}(id = ${userId})}">
+                    <div>
+                        <label>User Id Destination</label>
+                        <input type="number" name="userIdDestination" id="userIdMessage" value=""/>
+                    </div>
+                    <div>
+                        <label>did</label>
+                        <input type="number" name="did" id="userMessageIdDid" value="" hidden/>
+                    </div>
+                    <div>
+                        <label>Message</label>
+                        <input type="text" name="text"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary col-md-offset-4">Send</button>
+                </form>
+                <table class="table table-striped">
+                    <tr>
+                        <th>Id</th>
+                        <th>Date</th>
+                        <th>Text</th>
+                        <th>Type</th>
+                        <th>Oid</th>
+                        <th>Did</th>
+                    </tr>
+                    <tr th:each="message : ${allMessages}">
+                        <th th:text="${message.getMessageid()}"></th>
+                        <th th:text="${message.getMessageDate()}"></th>
+                        <th th:text="${message.getText()}"></th>
+                        <th th:text="${message.getMessageType()}"></th>
+                        <th th:text="${message.getOid()}"></th>
+                        <th th:text="${message.getDid()}"></th>
+
+                    </tr>
+                </table>
+            </div>
             <p class="admin-message-text text-center" th:utext="${userMessage}"></p>
         </div>
     </div>

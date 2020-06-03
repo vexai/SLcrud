@@ -1,7 +1,9 @@
 package com.panels.SLcrud.controller;
 
 
+import antlr.debug.MessageAdapter;
 import com.panels.SLcrud.model.Account;
+import com.panels.SLcrud.model.Message;
 import com.panels.SLcrud.model.Operation;
 import com.panels.SLcrud.model.User;
 import com.panels.SLcrud.repo.AccountRepository;
@@ -35,10 +37,8 @@ public class UserController {
     private OperationRepository operationRepository;
 
     public UserController(AccountRepository accountRepository,
-                          UserService userServiceInterface,
                           OperationRepository operationRepository) {
         this.accountRepository = accountRepository;
-        this.userServiceInterface = userServiceInterface;
         this.operationRepository = operationRepository;
     }
 
@@ -122,6 +122,8 @@ public class UserController {
         modelAndView.addObject("userMessage","USER Role");
         List<Operation> allUserOperations = this.userService.selectAllUserOperations(user.getId());
         modelAndView.addObject("allOperations", allUserOperations);
+        List<Message> allUsersMessages = this.userService.selectAllMessages(user.getId());
+        modelAndView.addObject("allMessages",allUsersMessages);
         modelAndView.setViewName("user/home");
         return modelAndView;
     }
@@ -132,53 +134,73 @@ public class UserController {
         return "redirect:/admin/home?deletedId" + id;
     }
 
-//    @PostMapping("/pay/{id}")
-//    public String pay(@PathVariable Long id, double budget, @Valid User user, Model model) {
-//        this.userService.payToAccount(id, budget);
-//        user.setId(id);
-//        return "redirect:/user/home?payedId" + id;
-//    }
+    @GetMapping("user/sentMessage/{id}")
+    public  String sendTextMessage(@PathVariable Long id,
+                                   Long userIdDestination,
+                                   String text,
+                                   String messageType,
+                                   Long userIdOrigin,
+                                   Long did) {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUserName(auth.getName());
+        modelAndView.addObject("userId", user.getId());
+        try
+        {
+            this.userService.send(id,userIdDestination,text,messageType,did,userIdOrigin);
+        } catch (Exception e){
+            return "redirect:/user/home?sentMessage?ERRORERRORERROR=" + e.getMessage();
+        }
+            return "redirect:/user/home?sentMessage=" + id;
+    }
 
 
     @GetMapping("/user/savedAccountOperation/{id}")
     public String saveAccountOperation(@PathVariable Long id,
                                        String operationType,
-                                       @RequestParam double operationBudget) {
+                                       @RequestParam double operationBudget,
+                                       Long oid,
+                                       Long did) {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userId", user.getId());
         try {
-            if (operationType.equals("PAYMENT"))
+            if (operationType.equals("DEPOSIT"))
             {
-                this.userService.payToAccount(id,operationBudget, operationType);
+                this.userService.depostitToAccount(id ,operationBudget, operationType, oid, did);
             }
             else if (operationType.equals("WITHDRAWAL"))
             {
-                this.userService.removeFromAccount(id, operationBudget, operationType);
+                this.userService.withdrawalFromAccount(id, operationBudget, operationType, did, oid );
             }
 
         } catch (Exception e) {
-            return "redirect:/user/home?savedAccountOperation?ERRORERRORERROR=" + e.getMessage();
+            return "redirect:/user/home?savedAccountOperation?ERRORERRORERROR=" + id + e.getMessage();
         }
         return "redirect:/user/home?savedAccountOperation=" + id;
     }
 
     @GetMapping("/user/operationTransfered/{id}")
     public String transferToAccount(@PathVariable Long id,
+                                    Long userIdOrigin,
                                     Long userIdDestination,
-                                    @RequestParam double operationBudget, String operationType) {
+                                    @RequestParam double operationBudget,
+                                    String operationType,
+                                    Long oid,
+                                    Long did) {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
         modelAndView.addObject("userId", user.getId());
         try {
-            if (operationType.equals("TRANSFER"))
-            {
-                this.userService.transfer(id, userIdDestination, operationBudget, operationType);
-            }
+
+            this.userService.transfer(id,userIdDestination, operationBudget, operationType, did, userIdOrigin);
+
         } catch (Exception e) {
+
             return "redirect:/user/home?operationERROR=" + id + e.getMessage();
+
         }
         return "redirect:/user/home?operationSuccess=" + id;
     }

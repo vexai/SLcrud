@@ -22,6 +22,8 @@ public class Operation implements Serializable {
     private Date operationDate;
     private double amount;
     private String op;
+    private Long oid;
+    private Long did;
     @ManyToOne
 //    @JoinColumn(name = "id")
     private User user;
@@ -30,12 +32,31 @@ public class Operation implements Serializable {
         super();
     }
 
-    public Operation(Date operationDate, double amount, User user, String op) {
+    public Operation(Date operationDate, double amount, User user,
+                     String op, Long oid, Long did) {
         super();
         this.operationDate = operationDate;
         this.amount = amount;
         this.user=user;
         this.op=op;
+        this.oid = oid;
+        this.did=did;
+    }
+
+    public Long getOid() {
+        return oid;
+    }
+
+    public void setOid(Long oid) {
+        this.oid = oid;
+    }
+
+    public Long getDid() {
+        return did;
+    }
+
+    public void setDid(Long did) {
+        this.did = did;
     }
 
     public Long getOperationId() {
@@ -78,5 +99,6 @@ public class Operation implements Serializable {
         this.user = user;
     }
 }
+
 
 
