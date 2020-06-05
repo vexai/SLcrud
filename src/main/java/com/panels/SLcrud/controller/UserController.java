@@ -11,6 +11,7 @@ import com.panels.SLcrud.repo.OperationRepository;
 import com.panels.SLcrud.service.UserService;
 import com.panels.SLcrud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -112,7 +113,7 @@ public class UserController {
     }
 
     @GetMapping(value="/user/home")
-    public ModelAndView userHome(){
+    public ModelAndView userHome(@RequestParam(name = "page", defaultValue = "0") int page){
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
@@ -124,9 +125,28 @@ public class UserController {
         modelAndView.addObject("allOperations", allUserOperations);
         List<Message> allUsersMessages = this.userService.selectAllMessages(user.getId());
         modelAndView.addObject("allMessages",allUsersMessages);
+//        Page<Operation> operationPage = userService.getOperationsByPage(user.getId(), page, 5);
+//        modelAndView.addObject("pageOperationModel",operationPage);
+//        int pageNumber = operationPage.getTotalPages();
+//        Integer[] pages = new Integer[pageNumber];
+//        for (int i = 0; i < pageNumber; i++)
+//        {
+//            pages[i] =i;
+//        }
+//        modelAndView.addObject("pagesModel", pages);
         modelAndView.setViewName("user/home");
         return modelAndView;
     }
+
+
+//    @GetMapping(value="/user/home/{id}")
+//    public String operationPagination(@PathVariable Long id){
+//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//    User user = userService.findUserByUserName(auth.getName());
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("user/home");
+//        return "redirect:/admin/home?page=" + id;
+//    }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {

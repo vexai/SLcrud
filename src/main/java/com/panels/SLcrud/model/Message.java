@@ -1,5 +1,8 @@
 package com.panels.SLcrud.model;
 
+import org.hibernate.validator.constraints.Length;
+import org.springframework.stereotype.Controller;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -13,6 +16,8 @@ public class Message implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date messageDate;
     private String messageType;
+    @Lob
+    @Column
     private String text;
     private Long did;
     private Long oid;

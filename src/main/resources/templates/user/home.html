@@ -81,13 +81,12 @@
                     <td th:text="${allOperations[i].getOperationDate()}"></td>
                     <td th:text="${allOperations[i].getAmount()}"></td>
                     <td>
-                        <div th:text="${allOperations[i].getOp()}">
-                            <p th:case="'TRANSFER'"><span th:text="'TRANSFER_TO'"></span> TO</p>
-                            <p th:case="'PAYMENT'">PAYMENT FROM</p>
+                        <div th:switch="${allOperations[i].getOp()}">
+                            <p th:case="'TRANSFER'"><span th:text="'TRANSFER TO'"></span></p>
+                            <p th:case="'PAYMENT'"><span th:text="'PAYMENT FROM'"></span></p>
                         </div>
                     </td>
-
-                    <td>
+                   <td>
                         <div th:switch="${allOperations[i].getOp()}">
                             <p th:case="'TRANSFER'"><span th:text="${allOperations[i].getOid()}"></span></p>
                             <p th:case="'PAYMENT'"><span th:text="${allOperations[i].getDid()}"></span></p>
@@ -95,6 +94,7 @@
                     </td>
                 </tr>
             </table>
+
 
             <div class="panel-heading">Send Message</div>
             <div class="panel-body">
@@ -109,7 +109,7 @@
                     </div>
                     <div>
                         <label>Message</label>
-                        <input type="text" name="text"/>
+                        <input type="text" name="text" th:maxlength="50"/>
                     </div>
                     <button type="submit" class="btn btn-primary col-md-offset-4">Send</button>
                 </form>
@@ -124,11 +124,11 @@
                     <tr th:each="i : ${#numbers.sequence(allMessages.size() -1, 0 ,-1)}">
                         <td th:text="${allMessages[i].getMessageid()}"></td>
                         <td th:text="${allMessages[i].getMessageDate()}"></td>
-                        <td th:text="${allMessages[i].getText()}"></td>
+<!--                        <td th:text="${allMessages[i].getText()}"></td>-->
                         <td>
-                            <div th:text="${allMessages[i].getMessageType()}">
-                                <p th:case="'SENT'">SENT TO</p>
-                                <p th:case="'RECEIVED'">RECEIVED FROM</p>
+                            <div th:SWITCH="${allMessages[i].getMessageType()}">
+                                <p th:case="'SENT'"><span th:text="'SENT TO'"></span></p>
+                                <p th:case="'RECEIVED'"><span th:text="'RECEIVED FROM'"></span></p>
                             </div>
                         </td>
                         <td>
@@ -139,6 +139,9 @@
                         </td>
                     </tr>
                 </table>
+                <div th:each="n : ${#numbers.sequence(allMessages.size() -1, 0 ,-1)}">
+                    <div th:text="${allMessages[n].getText()}"></div>
+                </div>
             </div>
             <p class="admin-message-text text-center" th:utext="${userMessage}"></p>
         </div>

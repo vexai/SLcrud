@@ -47,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**",
                                         "/user/savedAccountOperation/**",
                                           "/user/operationTransfered/**",
-                                            "user/sentMessage/**").hasRole("USER")
+                                            "user/sentMessage/**",
+                                                "user/home/**").hasRole("USER")
                 .anyRequest()
                 .authenticated()
                 .and().csrf().disable()

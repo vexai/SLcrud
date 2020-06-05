@@ -53,3 +53,45 @@ input[type="password"] {
     margin-top: 40px;
     width: 200px;
 }
+
+
+/* label focus color */
+.input-field input:focus + label {
+    color: #64b5f6 !important;
+}
+/* label underline focus color */
+.row .input-field input:focus {
+    border-bottom: 2px solid #64b5f6 !important;
+    box-shadow: 0 2px 0 0 #64b5f6 !important
+}
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+.fadein {
+    -webkit-animation: fadein 1s ease-in-out;
+    -moz-animation: fadein 1s ease-in-out;
+    animation: fadein 1s ease-in-out;
+}
+
+.logo-ibanq {
+    width: 70px;
+    height: 50px;
+}
+
+.login-img {
+    height: 250px;
+    width: 350px;
+}
+
+

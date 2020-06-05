@@ -16,4 +16,5 @@ public interface OperationRepository extends JpaRepository<Operation, Long> {
     List<Operation> findAllByOp(String op);
 
     List<Operation> findAllByUserId(Long userId);
+
 }
