@@ -19,7 +19,6 @@ public class UserServiceImpl {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private AccountRepository accountRepository;
     private MessageRepository messageRepository;
     private OperationRepository operationRepository;
 
@@ -27,13 +26,11 @@ public class UserServiceImpl {
     public UserServiceImpl(UserRepository userRepository,
                        RoleRepository roleRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       AccountRepository accountRepository,
                            OperationRepository operationRepository,
                            MessageRepository messageRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.accountRepository = accountRepository;
         this.operationRepository = operationRepository;
         this.messageRepository = messageRepository;
     }
@@ -66,10 +63,6 @@ public class UserServiceImpl {
 
     public void deleteUser(Long id) {
         this.userRepository.deleteById(id);
-    }
-
-    public List<Operation> selectAllOperations() {
-        return this.operationRepository.findAllByOp("op");
     }
 
     public List<Operation> selectAllUserOperations(Long id) {
@@ -105,17 +98,15 @@ public class UserServiceImpl {
     }
 
 
-//    @Override
+
     public void payToAccount(Long id, double budget, String op, Long userIdDestination, Long userIdOrigin) {
         User user = userRepository.findUserById(id);
         Operation operation = new Operation(new Date(), budget, user, "PAYMENT", userIdDestination, userIdOrigin);
-//        operation.setDid(user.getId());
         operationRepository.save(operation);
         user.setAccBudget(user.getAccBudget() + budget);
         userRepository.save(user);
     }
 
-//    @Override
     public void removeFromAccount(Long id, double budget, String op, Long userIdDestination, Long userIdOrigin) {
         User user = userRepository.findUserById(id);
         if (user.getAccBudget() < budget)
@@ -126,12 +117,11 @@ public class UserServiceImpl {
             user.setAccBudget(user.getAccBudget() - budget);
         }
         Operation operation = new Operation(new Date(), budget, user, "TRANSFER", userIdDestination, userIdOrigin);
-//        operation.setOid(user.getId());
         operationRepository.save(operation);
         userRepository.save(user);
     }
 
-//    @Override
+
     public void transfer(Long userIdOrigin,Long userIdDestination, double amount, String op, Long did, Long oid) {
         if(userIdOrigin.equals(userIdDestination)) {
             throw new RuntimeException(

@@ -54,11 +54,5 @@ public class User {
     private Collection<Operation> operations;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Collection<Message> messages;
-//    @OneToOne
-//    @MapsId
-//    private Account account;
-//    @ManyToMany(cascade = CascadeType.MERGE)
-//    @JoinTable(name = "users_accounts", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "account_id"))
-//    private Set<Account> account;
 
 }

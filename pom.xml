@@ -68,12 +68,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>3.0.0</version>
-			<type>pom</type>
-		</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.testcontainers/mysql -->
 		<dependency>
@@ -86,7 +81,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>login-tutorial</finalName>
+		<finalName>Bank Online</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

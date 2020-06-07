@@ -15,6 +15,10 @@ window.onload = function() {
         $("#userTransferIdDid").val($('#userIdTransfer').val());
     }
 
+    $(document).ready(function(){
+        $('.collapsible').collapsible();
+    });
+
 };
 
 

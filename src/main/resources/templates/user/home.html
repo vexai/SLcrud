@@ -4,86 +4,98 @@
 
 <head>
     <title>User Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/homes.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/script.js}"></script>
 </head>
 
 <body>
-<div class="container">
+<div class="container fadein">
 
-    <form th:action="@{/logout}" method="get">
-        <button class="btn btn-md btn-danger btn-block" name="registration"
-                type="Submit">Logout
-        </button>
-    </form>
-
-    <div class="panel-group" style="margin-top:40px">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <span th:utext="${userName}"></span>
+<div class="row">
+    <div class="col s6" >
+        <div class="card" style="height:412px;border-radius: 25px;">
+            <div class="center-align">
+                <img th:src="@{/images/undraw_user.png}" class="card-image activator" border-radius="" width="350" height="200" alt="Logo"/>
             </div>
-            <div class="panel-body">
-                <img th:src="@{/login.css}" class="img-responsive center-block" width="200" height="200"
-                     alt="img"/>
+            <div style="font-size: 18px; padding-left: 18px;">
+            <div th:text="${userName}" style="margin-top: 30px;">!</div>
+            <div>Account/User ID: <span th:text="${userId}"></span></div>
+            <div>Your current balance: <span th:text="${accBudget}"></span> $</div>
             </div>
-            <div class="panel panel-primary">
-                <div class="panel-heading">Choose account operation</div>
-                <div class="panel-body">
-                    <span th:utext="${accBudget}"></span>
-                    <form th:action="@{/user/savedAccountOperation/{id}(id = ${userId})}" method="get">
-                        <div>
-                            <label>Amount: </label>
-                            <input type="number" name="operationBudget"  />
-                        </div>
-                        <input type="radio" name="operationType" value="DEPOSIT" checked="checked"/>
-                        <label>DEPOSIT</label>
-                        <input type="radio"  name="operationType" value="WITHDRAWAL" />
-                        <label>WITHDRAWAL</label>
-                        <button type="submit" class="btn btn-primary col-md-offset-4">
-                            Save </button>
-                    </form>
+            <form th:action="@{/logout}" method="get">
+                <div class="center-align">
+                    <button class="btn red accent-1" style="margin-top: 30px; border-radius: 15px;" name="registration"
+                            type="Submit">Logout
+                    </button>
                 </div>
-            </div>
-            <div class="panel-heading">Choose Id to transfer</div>
-            <div class="panel-body">
-                <form th:action="@{/user/operationTransfered/{id}(id = ${userId})}" method="get">
-                    <div>
-                        <input type="radio" name="operationType"  checked="checked" hidden/>
-                    </div>
-                    <div>
-                        <label>User Id Destination</label>
-                        <input type="number" name="userIdDestination" id="userIdTransfer" value=""/>
-                    </div>
-                    <div>
-                        <label>did</label>
-                        <input type="number" name="did"id="userIdTransferDid" value="" hidden/>
-                    </div>
-                    <div>
-                        <label>Transfer Amount</label>
-                        <input type="number" name="operationBudget" />
-                    </div>
-                    <button type="submit" class="btn btn-primary col-md-offset-4">Transfer</button>
-                </form>
-            </div>
-            <table class="table table-striped">
+            </form>
+        </div>
+    </div>
+    <div class="col s6">
+    <div class="card" style="height: 412px;border-radius: 25px;">
+        <div class="card-image waves-effect waves-block waves-light">
+            <img th:src="@{/images/undraw_savings.png}" class="activator"  width="350" height="270" alt="Logo"/>
+        </div>
+        <div class="card-content" style="border-radius: 25px">
+            <span class="card-title activator grey-text text-darken-4">Deposit or withdraw.
+                <i class="material-icons right" >attach_money</i></span>
+        </div>
+        <div class="card-reveal">
+            <span class="card-title grey-text text-darken-4">Deposit or withdraw.<i class="material-icons right">close</i></span>
+            </br>
+            </br>
+            </br>
+            <div style="font-size: 18px;">Your current balance: <span style="font-size: 18px;" th:text="${accBudget}"></span> $</div>
+            </br>
+            <form th:action="@{/user/savedAccountOperation/{id}(id = ${userId})}" method="get">
+                <div>
+                    <label>Amount: </label>
+                    <input type="number" min="1" name="operationBudget"  />
+                </div>
+                <label>
+                    <input type="radio" name="operationType" value="DEPOSIT" checked="checked"/>
+                    <span>DEPOSIT</span>
+                </label>
+                <label>
+                    <input type="radio"  name="operationType" value="WITHDRAWAL" />
+                    <span>WITHDRAWAL</span>
+                </label>
+
+                <button type="submit" class="btn red accent-1" style="border-radius: 15px;">Save </button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+    <ul class="collapsible" style="border-radius:25px;">
+        <li>
+            <div class="collapsible-header" style="border-radius:25px;">
+                <p style="margin-left: 50vh">Check your operations history.</p>
+                <i class="material-icons right" style="margin-top: 15px">account_balance</i></div>
+            <div class="collapsible-body" style="border-radius:25px; background-color: white">
+                <span>
+                    <table class="table striped">
                 <tr>
-                    <th>Id</th>
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Operation</th>
-                    <th>Id</th>
+                    <th>Account ID</th>
                 </tr>
                 <tr th:each="i : ${#numbers.sequence(allOperations.size() -1, 0, -1)}">
-                    <td th:text="${allOperations[i].getOperationId()}"></td>
                     <td th:text="${allOperations[i].getOperationDate()}"></td>
                     <td th:text="${allOperations[i].getAmount()}"></td>
                     <td>
                         <div th:switch="${allOperations[i].getOp()}">
                             <p th:case="'TRANSFER'"><span th:text="'TRANSFER TO'"></span></p>
                             <p th:case="'PAYMENT'"><span th:text="'PAYMENT FROM'"></span></p>
+                            <p th:case="'DEPOSIT'"><span th:text="'DEPOSIT'"></span></p>
+                            <p th:case="'WITHDRAWAL'"><span th:text="'WITHDRAWAL'"></span></p>
                         </div>
                     </td>
                    <td>
@@ -94,41 +106,113 @@
                     </td>
                 </tr>
             </table>
+            </span>
+            </div>
+        </li>
+    </ul>
+
+    <div class="row">
+        <div class="col s6">
+            <div class="card" style="height: 412px; border-radius: 25px;">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <img th:src="@{/images/undraw_transfer.png}" class="activator"  width="350" height="270" alt="Logo"/>
+                </div>
+                <div class="card-content" style="border-radius: 25px">
+                <span class="card-title activator grey-text text-darken-4">Transfer funds.
+                    <i class="material-icons right">compare_arrows</i></span>
+
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Transfer funds.<i class="material-icons right">close</i></span>
+                    <div>Choose ID to transfer.</div>
+                    </br>
+                    <div class="panel-body">
+                        <form th:action="@{/user/operationTransfered/{id}(id = ${userId})}" method="get">
+                            <div>
+                                <input type="radio" name="operationType"  checked="checked" hidden/>
+                            </div>
+                            <div>
+                                <label>User ID Destination:</label>
+                                <input type="number" min="1" name="userIdDestination" id="userIdTransfer" value=""/>
+                            </div>
+                            <div>
+
+                                <input type="number" min="1" name="did" id="userIdTransferDid" value="" hidden/>
+                            </div>
+                            <div>
+                                <label>Transfer Amount:</label>
+                                <input type="number" min="1" name="operationBudget" />
+                            </div>
+                            </br>
+                            <div class="center-align">
+                                <button type="submit" class="btn red accent-1" style="border-radius: 15px;">Transfer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="col s6">
+            <div class="card" style="height: 412px; border-radius: 25px;">
+            <div class="card-image waves-effect waves-block waves-light center-align">
+                <img th:src="@{/images/undraw_message.png}" class="activator"  width="350" height="270" alt="Logo"/>
+            </div>
+            <div class="card-content" style="border-radius: 25px">
+                <span class="card-title activator grey-text text-darken-4">Send a message.
+                    <i class="material-icons right">message</i></span>
+
+            </div>
+            <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">Send a message.<i class="material-icons right">close</i></span>
+                <div class="panel-heading">Choose ID and type text.</div>
+                </br>
+                <div class="panel-body">
+                    <form th:action="@{/user/sentMessage/{id}(id = ${userId})}">
+                        <div>
+                            <label>User Id Destination:</label>
+                            <input type="number" min="1" name="userIdDestination" id="userIdMessage" value=""/>
+                        </div>
+                        <div>
+                            <input type="number" min="1" name="did" id="userMessageIdDid" value="" hidden/>
+                        </div>
+                        <div>
+                            <label>Message:</label>
+                            <input type="text" name="text" th:maxlength="100"/>
+                        </div>
+                        </br>
+                        <div class="center-align">
+                        <button type="submit" class="btn red accent-1" style="border-radius: 15px;">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 
 
-            <div class="panel-heading">Send Message</div>
-            <div class="panel-body">
-                <form th:action="@{/user/sentMessage/{id}(id = ${userId})}">
-                    <div>
-                        <label>User Id Destination</label>
-                        <input type="number" name="userIdDestination" id="userIdMessage" value=""/>
-                    </div>
-                    <div>
-                        <label>did</label>
-                        <input type="number" name="did" id="userMessageIdDid" value="" hidden/>
-                    </div>
-                    <div>
-                        <label>Message</label>
-                        <input type="text" name="text" th:maxlength="50"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary col-md-offset-4">Send</button>
-                </form>
-                <table class="table table-striped">
+
+
+    <ul class="collapsible" style="border-radius: 25px;">
+        <li>
+            <div class="collapsible-header" style="border-radius: 25px;">
+                <p style="margin-left: 50vh">Check your messages history.</p>
+                <i class="material-icons right" style="margin-top: 15px">archive</i></div>
+            <div class="collapsible-body" style="border-radius: 25px;background-color: white"><span>
+                <table class="table striped" style="border-radius: 25px;">
                     <tr>
-                        <th>Id</th>
                         <th>Date</th>
+                        <th></th>
+                        <th>ID</th>
                         <th>Text</th>
-                        <th>Type</th>
-                        <th>id</th>
                     </tr>
                     <tr th:each="i : ${#numbers.sequence(allMessages.size() -1, 0 ,-1)}">
-                        <td th:text="${allMessages[i].getMessageid()}"></td>
-                        <td th:text="${allMessages[i].getMessageDate()}"></td>
-<!--                        <td th:text="${allMessages[i].getText()}"></td>-->
-                        <td>
+                        <td th:text="${allMessages[i].getMessageDate()}" style="width: 150px"></td>
+                        <!--                        <td th:text="${allMessages[i].getText()}"></td>-->
+                        <td style="width: 130px">
                             <div th:SWITCH="${allMessages[i].getMessageType()}">
-                                <p th:case="'SENT'"><span th:text="'SENT TO'"></span></p>
-                                <p th:case="'RECEIVED'"><span th:text="'RECEIVED FROM'"></span></p>
+                                <p th:case="'SENT'"><span th:text="'SENT TO'" ></span></p>
+                                <p th:case="'RECEIVED'"><span th:text="'RECEIVED FROM'" style="width: 100px"></span></p>
                             </div>
                         </td>
                         <td>
@@ -137,14 +221,91 @@
                                 <p th:case="'RECEIVED'"><span th:text="${allMessages[i].getOid()}"></span></p>
                             </div>
                         </td>
+                        <td><div style="overflow-wrap: anywhere" th:text="${allMessages[i].getText()}"></div></td>
+
                     </tr>
                 </table>
-                <div th:each="n : ${#numbers.sequence(allMessages.size() -1, 0 ,-1)}">
-                    <div th:text="${allMessages[n].getText()}"></div>
-                </div>
+            </span>
             </div>
-            <p class="admin-message-text text-center" th:utext="${userMessage}"></p>
-        </div>
+        </li>
+    </ul>
+
+</div>
+
+<div class="podbar">
+    <div style="display: flex;bottom:-400px; left:0; position: fixed; z-index: -99; margin-left: -20px;margin-top: -40px">
+        <svg
+                width="900"
+                height="900"
+                viewBox="0 0 700 500"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#0093ff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#0eceff;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(110,200)">
+                <path d="M89.4,-154.3C105.1,-111.6,99.6,-71.1,124.6,-31.6C149.6,7.8,205.1,46.2,217.5,90C230,133.8,199.3,183,155.9,183.6C112.5,184.1,56.2,136.1,3.3,131.5C-49.6,126.9,-99.1,165.8,-140.7,164.6C-182.2,163.4,-215.7,122.2,-229.6,75.5C-243.5,28.8,-237.8,-23.3,-205.8,-50C-173.9,-76.7,-115.8,-98,-77.1,-203.3C-38.4,-148.5,-119.2,-317.8,8.8,-209.9C36.8,-142,73.7,-197.1,89.4,-154.3Z" fill="url(#grad2)" />
+            </g>
+        </svg>
+    </div>
+    <div style="display: flex; bottom:-400px; left:0; position: fixed; z-index: -99; margin-left: -50px">
+        <svg
+                width="900"
+                height="900"
+                viewBox="0 0 700 500"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ca656f;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#F7ACB1;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(100,200)">
+                <path d="M89.4,-154.3C105.1,-111.6,99.6,-71.1,124.6,-31.6C149.6,7.8,205.1,46.2,217.5,90C230,133.8,199.3,183,155.9,183.6C112.5,184.1,56.2,136.1,3.3,131.5C-49.6,126.9,-99.1,165.8,-140.7,164.6C-182.2,163.4,-215.7,122.2,-229.6,75.5C-243.5,28.8,-237.8,-23.3,-205.8,-50C-173.9,-76.7,-115.8,-98,-77.1,-203.3C-38.4,-148.5,-119.2,-317.8,8.8,-209.9C36.8,-142,73.7,-197.1,89.4,-154.3Z" fill="url(#grad1)" />
+            </g>
+        </svg>
+    </div>
+</div>
+<div class="nadbar">
+    <div style="display: flex; top:-0px; right:0px; position: fixed; z-index:-99; margin-right: -400px;margin-top: -300px">
+        <svg
+                width="900"
+                height="900"
+                viewBox="0 0 600 600"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ae00ca;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#6c0388;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(280,300)">
+                <path d="M34,-62.4C39.1,-49.6,35,-31.8,72.7,-14.2C110.4,3.5,189.8,21.1,200.1,36.9C210.5,52.7,151.7,66.6,113.9,84.1C76.1,101.7,59.2,122.8,35.7,136.4C12.3,150,-17.7,156.1,-26.5,133.6C-35.3,111.2,-22.9,60.2,-50.6,38.3C-78.3,16.4,-146.1,23.5,-171,9.8C-195.9,-3.9,-178,-38.5,-157.4,-67C-136.8,-95.6,-113.6,-118,-86.9,-121C-60.2,-124,-30.1,-107.5,-7.8,-95.3C14.4,-83.1,28.8,-75.2,34,-62.4Z" fill="url(#grad3)" />
+            </g>
+        </svg>
+    </div>
+    <div style="display: flex; top:0; right:0px; position: fixed;z-index:-99; margin-right: -400px; margin-top: -360px">
+        <svg
+                width="900"
+                height="900"
+                viewBox="0 0 600 600"
+                xmlns="http://www.w3.org/2000/svg"
+        >
+            <defs>
+                <linearGradient id="grad4" x1="0%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" style="stop-color:#ca656f;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#F7ACB1;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g transform="translate(300,300)">
+                <path d="M34,-62.4C39.1,-49.6,35,-31.8,72.7,-14.2C110.4,3.5,189.8,21.1,200.1,36.9C210.5,52.7,151.7,66.6,113.9,84.1C76.1,101.7,59.2,122.8,35.7,136.4C12.3,150,-17.7,156.1,-26.5,133.6C-35.3,111.2,-22.9,60.2,-50.6,38.3C-78.3,16.4,-146.1,23.5,-171,9.8C-195.9,-3.9,-178,-38.5,-157.4,-67C-136.8,-95.6,-113.6,-118,-86.9,-121C-60.2,-124,-30.1,-107.5,-7.8,-95.3C14.4,-83.1,28.8,-75.2,34,-62.4Z" fill="url(#grad4)" />
+            </g>
+        </svg>
     </div>
 </div>
 </body>

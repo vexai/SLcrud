@@ -3,39 +3,52 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title>Spring Security Tutorial</title>
-    <link rel="stylesheet" type="text/css" th:href="@{css/login.css}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" th:href="@{css/logins.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
 <body>
 
 <div class="container">
-    <img th:src="@{/images/login.png}" class="img-responsive center-block img-margin"  width="300" height="300" alt="Logo"/>
-    <form th:action="@{/login}" method="POST" class="form-signin">
-        <h3 class="form-signin-heading" th:text="Welcome"></h3>
-        <br/>
-
-        <input type="text" id="user_name" name="user_name" placeholder="User Name"
-               class="form-control"/> <br/>
-        <input type="password" th:placeholder="Password"
-               id="password" name="password" class="form-control"/> <br/>
-
-        <div align="center" th:if="${param.error}">
-            <p style="font-size: 20; color: #FF1C19;">User Name or Password invalid, please verify</p>
+    <div class="valign-wrapper" style="height: 100vh;">
+    <div class="center-align" style="width: 100%;">
+        <div class="fadein">
+        <img th:src="@{/images/undraw_login.png}" class="img-responsive center-block"  width="350" height="250" alt="Logo"/>
+            <p style="color: #F7ACB1; font-size: 15px">Welcome to future of online banking!</p>
+        <form th:action="@{/login}" method="POST" class="form-signin">
+            <div class="row">
+                <div class="input-field col s4 offset-s4">
+                    <input id="user_name" name="user_name" type="text" class="validate">
+                    <label for="user_name">User Name</label>
+                </div>
+                <div class="input-field col s4 offset-s4">
+                    <input id="password" name="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div align="center" th:if="${param.error}">
+                <p style="font-size: 20px; color: #FF1C19;">User Name or Password invalid, please verify</p>
+            </div>
+            <div class="center-align">
+                <button class="btn blue" style="border-radius: 15px; width: 150px" name="Submit" value="Login" type="Submit"
+                >Sign In</button>
+            </div>
+        </form>
+        <p style="color: #6c0388; font-size: 10px">Don't have an account? Sign up!</p>
+        <div class="center-align">
+            <form th:action="@{/registration}" method="get" style="padding: 0">
+                <button class="btn indigo" style="border-radius: 15px; width: 150px;" type="Submit">Sign Up</button>
+            </form>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" name="Submit" value="Login" type="Submit"
-        >Sign In</button>
-
-    </form>
-    <form th:action="@{/registration}" method="get" class="form-register">
-        <button class="btn btn-width btn-lg btn-primary btn-block" type="Submit">Sign Up</button>
-    </form>
+        </div>
+    </div>
+</div>
 </div>
 <div class="podbar">
-    <div style="display: flex;bottom:-400px; left:0; position: fixed;  margin-left: -20px;margin-top: -40px">
+    <div style="display: flex;bottom:-400px; left:0; position: fixed; z-index: -99; margin-left: -20px;margin-top: -40px">
         <svg
                 width="900"
                 height="900"
@@ -53,7 +66,7 @@
             </g>
         </svg>
     </div>
-    <div style="display: flex; bottom:-400px; left:0; position: fixed;  margin-left: -50px">
+    <div style="display: flex; bottom:-400px; left:0; position: fixed; z-index: -99; margin-left: -50px">
         <svg
                 width="900"
                 height="900"

@@ -3,78 +3,74 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Registration Form</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/signup.css}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/register.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 <body>
 <div class="container">
-    <div class="row form-signin center-block register-margin">
-        <div class="center-block">
-            <form autocomplete="off" action="#" th:action="@{/registration}"
-                  th:object="${user}" method="post" class="form-horizontal center-block"
-                  role="form">
-                <h2 style="color: white; margin-bottom: 20px">Sign Up Form</h2>
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
-                               class="validation-message"></label>
-                        <input type="text" th:field="*{name}" placeholder="Name"
-                               class="form-control"/>
-                    </div>
-                </div>
+    <div class="valign-wrapper" style="height: 100vh;">
+        <div class="center-align" style="width: 100%;">
+            <div class="fadein">
+                <form autocomplete="off" action="#" th:action="@{/registration}"
+                      th:object="${user}" method="post" class="form-horizontal center-block"
+                      role="form">
 
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
-                               class="validation-message"></label>
-                        <input type="text" th:field="*{lastName}"
-                               placeholder="Last Name" class="form-control"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <input type="text" th:field="*{email}" placeholder="Email"
-                               class="form-control"/> <label
-                            th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-                            class="validation-message"></label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <input type="text" th:field="*{userName}" placeholder="User Name"
-                               class="form-control"/> <label
-                            th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"
-                            class="validation-message"></label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <input type="password" th:field="*{password}"
-                               placeholder="Password" class="form-control"/> <label
-                            th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-                            class="validation-message"></label>
-                    </div>
-                </div>
+                    <div class="row">
+                        <div class="center-align">
+                            <h5 style="color: #6c0388; margin-bottom: 20px">Sign Up Form</h5>
+                        </div>
+                        <div class="input-field col s4 offset-s4">
+                            <input  type="text" th:field="*{name}" placeholder="Name"/>
+                            <label  th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></label>
+                        </div>
 
-                <div class="form-group">
-                    <div class="col-lg-8 col-lg-offset-2">
-                        <button type="submit" class="btn btn-primary btn-block">Register User</button>
+                        <div class="input-field col s4 offset-s4">
+                            <label th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></label>
+                            <input type="text" th:field="*{lastName}" placeholder="Last Name"/>
+                        </div>
+
+
+                        <div class="input-field col s4 offset-s4">
+                            <input type="text" th:field="*{email}" placeholder="Email"/> <label
+                                th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></label>
+                        </div>
+
+
+                        <div class="input-field col s4 offset-s4">
+                            <input type="text" th:field="*{userName}" placeholder="User Name"/>
+                            <label th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"
+                                   style="margin-top: -25px"></label >
+                        </div>
+
+
+                        <div class="input-field col s4 offset-s4">
+                            <input type="password" th:field="*{password}" placeholder="Password">
+                            <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                                   style=" margin-top: -25px"></label>
+                        </div>
                     </div>
+                    <div class="center-align">
+                        <button type="submit" class="btn indigo" style="border-radius: 15px; width: 150px;">Register User</button>
+                    </div>
+                </form>
+            <h5 class="col s4 offset-4"><span style="color: #F7ACB1" th:utext="${successMessage}"></span></h5>
+
+
+                <div class="center-align">
+                    <form th:action="@{/}" method="get">
+
+                        <button class="btn blue" style="border-radius: 15px; width: 250px" type="Submit">Go To Login Page</button>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-<div class="container">
-    <h2 class="col-lg-6 col-lg-offset-3"><span class="text-success " th:utext="${successMessage}"></span></h2>
-</div>
-<form th:action="@{/}" method="get" class="form-register">
-    <button class="btn btn-md btn-primary btn-block" type="Submit">Go To Login Page</button>
-</form>
+
 <div class="podbar">
-    <div style="display: flex;bottom:-400px; left:0; position: fixed;  margin-left: -20px;margin-top: -40px">
+    <div style="display: flex;bottom:-400px; left:0; position: fixed; z-index:-99; margin-left: -20px;margin-top: -40px">
         <svg
                 width="900"
                 height="900"
@@ -92,7 +88,7 @@
             </g>
         </svg>
     </div>
-    <div style="display: flex; bottom:-400px; left:0; position: fixed;  margin-left: -50px">
+    <div style="display: flex; bottom:-400px; left:0; position: fixed; z-index:-99; margin-left: -50px">
         <svg
                 width="900"
                 height="900"

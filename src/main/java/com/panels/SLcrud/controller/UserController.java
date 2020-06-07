@@ -2,16 +2,18 @@ package com.panels.SLcrud.controller;
 
 
 import antlr.debug.MessageAdapter;
-import com.panels.SLcrud.model.Account;
 import com.panels.SLcrud.model.Message;
 import com.panels.SLcrud.model.Operation;
 import com.panels.SLcrud.model.User;
-import com.panels.SLcrud.repo.AccountRepository;
+
 import com.panels.SLcrud.repo.OperationRepository;
-import com.panels.SLcrud.service.UserService;
+
 import com.panels.SLcrud.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,40 +24,26 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class UserController {
 
-    int adminRoleId = 1;
-
     @Autowired
     private UserServiceImpl userService;
 
-    private AccountRepository accountRepository;
-
-    private UserService userServiceInterface;
-
     private OperationRepository operationRepository;
 
-    public UserController(AccountRepository accountRepository,
-                          OperationRepository operationRepository) {
-        this.accountRepository = accountRepository;
+    public UserController(OperationRepository operationRepository) {
         this.operationRepository = operationRepository;
     }
 
     @GetMapping(value={"/", "/login"})
-    public ModelAndView login(){
+    public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         return modelAndView;
-//    public List<Account> accountList() {
-//        return accountRepository.findAll();
     }
-
-//    @GetMapping(value={"/all"})
-////    public List<Account> accountList() {
-////        return accountRepository.findAll();
-//    }
 
     @RequestMapping(value= {"/default"})
     public String defaultAfterLogin() {
@@ -77,7 +65,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/registration")
-    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult, Account account) {
+    public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
         User userExists = userService.findUserByUserName(user.getUserName());
         if (userExists != null) {
@@ -88,10 +76,8 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("registration");
         } else {
-//            userService.saveAccount(account);
             userService.saveUser(user);
             modelAndView.addObject("successMessage", "User has been registered successfully");
-//            modelAndView.addObject("account", new Account());
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("registration");
 
@@ -117,7 +103,7 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByUserName(auth.getName());
-        modelAndView.addObject("userName", "Welcome " + user.getUserName() + "/" + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+        modelAndView.addObject("userName", "Welcome: " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
         modelAndView.addObject("accBudget", user.getAccBudget());
         modelAndView.addObject("userId", user.getId());
         modelAndView.addObject("userMessage","USER Role");
@@ -125,28 +111,9 @@ public class UserController {
         modelAndView.addObject("allOperations", allUserOperations);
         List<Message> allUsersMessages = this.userService.selectAllMessages(user.getId());
         modelAndView.addObject("allMessages",allUsersMessages);
-//        Page<Operation> operationPage = userService.getOperationsByPage(user.getId(), page, 5);
-//        modelAndView.addObject("pageOperationModel",operationPage);
-//        int pageNumber = operationPage.getTotalPages();
-//        Integer[] pages = new Integer[pageNumber];
-//        for (int i = 0; i < pageNumber; i++)
-//        {
-//            pages[i] =i;
-//        }
-//        modelAndView.addObject("pagesModel", pages);
         modelAndView.setViewName("user/home");
         return modelAndView;
     }
-
-
-//    @GetMapping(value="/user/home/{id}")
-//    public String operationPagination(@PathVariable Long id){
-//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//    User user = userService.findUserByUserName(auth.getName());
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("user/home");
-//        return "redirect:/admin/home?page=" + id;
-//    }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {

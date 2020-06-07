@@ -25,7 +25,6 @@ public class Operation implements Serializable {
     private Long oid;
     private Long did;
     @ManyToOne
-//    @JoinColumn(name = "id")
     private User user;
 
     public Operation() {
