@@ -4,7 +4,7 @@
 
 <head>
     <title>User Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/homes.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -19,7 +19,7 @@
     <div class="col s6" >
         <div class="card" style="height:412px;border-radius: 25px;">
             <div class="center-align">
-                <img th:src="@{/images/undraw_user.png}" class="card-image activator" border-radius="" width="350" height="200" alt="Logo"/>
+                <img th:src="@{/images/undraw_user.png}" class="activator" width="55%" alt="Logo"/>
             </div>
             <div style="font-size: 18px; padding-left: 18px;">
             <div th:text="${userName}" style="margin-top: 30px;">!</div>
@@ -38,7 +38,9 @@
     <div class="col s6">
     <div class="card" style="height: 412px;border-radius: 25px;">
         <div class="card-image waves-effect waves-block waves-light">
-            <img th:src="@{/images/undraw_savings.png}" class="activator"  width="350" height="270" alt="Logo"/>
+
+            <img th:src="@{/images/undraw_savings.png}" class="activator" alt="Logo"/>
+
         </div>
         <div class="card-content" style="border-radius: 25px">
             <span class="card-title activator grey-text text-darken-4">Deposit or withdraw.
@@ -115,7 +117,9 @@
         <div class="col s6">
             <div class="card" style="height: 412px; border-radius: 25px;">
                 <div class="card-image waves-effect waves-block waves-light">
-                    <img th:src="@{/images/undraw_transfer.png}" class="activator"  width="350" height="270" alt="Logo"/>
+
+                        <img th:src="@{/images/undraw_transfer.png}" class="activator"  alt="Logo"/>
+
                 </div>
                 <div class="card-content" style="border-radius: 25px">
                 <span class="card-title activator grey-text text-darken-4">Transfer funds.
@@ -155,7 +159,9 @@
             <div class="col s6">
             <div class="card" style="height: 412px; border-radius: 25px;">
             <div class="card-image waves-effect waves-block waves-light center-align">
-                <img th:src="@{/images/undraw_message.png}" class="activator"  width="350" height="270" alt="Logo"/>
+
+                    <img th:src="@{/images/undraw_message.png}" class="activator" alt="Logo"/>
+
             </div>
             <div class="card-content" style="border-radius: 25px">
                 <span class="card-title activator grey-text text-darken-4">Send a message.

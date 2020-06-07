@@ -30,3 +30,8 @@ body {
     -moz-animation: fadein 1.5s ease-in-out;
     animation: fadein 1.5s ease-in-out;
 }
+
+.card-image {
+    width: 70%;
+    margin: auto;
+}
