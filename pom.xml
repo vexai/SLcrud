@@ -6,7 +6,7 @@
 	<groupId>com.panels</groupId>
 	<artifactId>SLcrud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SLcrud</name>
+	<name>ibanq</name>
 	<description>Security Register-Login </description>
 
 	<parent>
